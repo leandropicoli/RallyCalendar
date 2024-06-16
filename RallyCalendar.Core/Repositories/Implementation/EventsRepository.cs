@@ -1,28 +1,29 @@
-﻿using RallyCalendar.Core.Models;
-using System.Text.Json;
+﻿using Microsoft.Extensions.Caching.Memory;
+using RallyCalendar.Core.Models;
+using RallyCalendar.Core.Repositories.Implementation;
 
 namespace RallyCalendar.Core.Repositories
 {
-    public class EventsRepository : BaseHttpRepository, IEventsRepository
+    public class EventsRepository : CacheHttpRepository, IEventsRepository
     {
+        public EventsRepository(IMemoryCache memoryCache) : base(memoryCache)
+        {
+        }
+
         public async Task<IEnumerable<Event>> GetEvents(string championship, int year)
         {
             var endpoint = $"content/filters/calendar?{championship}=wrc&origin=vcms&year={year}";
-            var response = await Client.GetAsync(endpoint);
-            response.EnsureSuccessStatusCode();
-
-            var responseBody = await response.Content.ReadAsStringAsync();
-
-            var externalEvents = JsonSerializer.Deserialize<Models.ExternalModels.Events>(responseBody);
+            var cacheKey = $"Events-{championship}-{year}";
+            var response = await GetAsync<Models.ExternalModels.Events>(endpoint, cacheKey);
 
             var events = new List<Event>();
 
-            if (externalEvents == null || externalEvents.Content == null || externalEvents.Content.Length == 0)
+            if (response == null || response.Content == null || response.Content.Length == 0)
             {
                 return events;
             }
 
-            foreach (var content in externalEvents.Content)
+            foreach (var content in response.Content)
             {
                 var rally = new Event
                 {
@@ -35,6 +36,8 @@ namespace RallyCalendar.Core.Repositories
                     StartDate = content.StartDateLocal,
                     Year = content.ReleaseYear
                 };
+
+                events.Add(rally);
             }
 
             return events;
