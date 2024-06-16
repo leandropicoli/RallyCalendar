@@ -1,12 +1,4 @@
-﻿// See https://aka.ms/new-console-template for more information
-using Microsoft.Extensions.Configuration;
-using RallyCalendar.Core.Repositories;
-
-// Build the configuration
-IConfiguration config = new ConfigurationBuilder()
-    .SetBasePath(AppContext.BaseDirectory)
-    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-    .Build();
+﻿using RallyCalendar.Core.Repositories;
 
 Console.WriteLine("Hello, World!");
 

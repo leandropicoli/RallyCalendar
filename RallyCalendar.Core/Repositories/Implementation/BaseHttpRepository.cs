@@ -1,4 +1,4 @@
-﻿using System.Configuration;
+﻿using RallyCalendar.Core.Configuration;
 
 namespace RallyCalendar.Core.Repositories
 {
@@ -8,7 +8,7 @@ namespace RallyCalendar.Core.Repositories
         protected BaseHttpRepository()
         {
             Client = new HttpClient();
-            Client.BaseAddress = new Uri(ConfigurationManager.AppSettings["WrcEndpoint"]);
+            Client.BaseAddress = new Uri(ConfigurationManager.GetSetting("WrcEndpoint"));
         }
     }
 }
