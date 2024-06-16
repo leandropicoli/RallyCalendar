@@ -12,7 +12,7 @@ namespace RallyCalendar.Core.Repositories
 
         public async Task<IEnumerable<Event>> GetEvents(string championship, int year)
         {
-            var endpoint = $"content/filters/calendar?{championship}=wrc&origin=vcms&year={year}";
+            var endpoint = $"content/filters/calendar?championship={championship}&origin=vcms&year={year}";
             var cacheKey = $"Events-{championship}-{year}";
             var response = await GetAsync<Models.ExternalModels.Events>(endpoint, cacheKey);
 

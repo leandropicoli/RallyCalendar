@@ -21,7 +21,7 @@ namespace RallyCalendar.Core.Repositories.Implementation
             {
                 return cachedResponse;
             }
-
+             
             var response = await Client.GetAsync(endpoint);
             response.EnsureSuccessStatusCode();
 
