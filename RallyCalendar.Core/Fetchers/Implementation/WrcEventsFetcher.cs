@@ -1,20 +1,28 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using RallyCalendar.Core.Configuration;
+using RallyCalendar.Core.Fetchers.Abstraction;
 using RallyCalendar.Core.Models;
-using RallyCalendar.Core.Repositories.Implementation;
+using System.Text.Json;
 
-namespace RallyCalendar.Core.Repositories
+namespace RallyCalendar.Core.Fetchers.Implementation
 {
-    public class EventsRepository : CacheHttpRepository, IEventsRepository
+    public class WrcEventsFetcher : IEventsFetcher
     {
-        public EventsRepository(IMemoryCache memoryCache) : base(memoryCache)
+        private readonly HttpClient _httpClient;
+        public WrcEventsFetcher()
         {
+            _httpClient = new HttpClient();
+            _httpClient.BaseAddress = new Uri(ConfigurationManager.GetSetting("WrcEndpoint"));
         }
 
         public async Task<IEnumerable<Event>> GetEvents(string championship, int year)
         {
             var endpoint = $"content/filters/calendar?championship={championship}&origin=vcms&year={year}";
-            var cacheKey = $"Events-{championship}-{year}";
-            var response = await GetAsync<Models.ExternalModels.Events>(endpoint, cacheKey);
+            var httpResponse = await _httpClient.GetAsync(endpoint);
+            httpResponse.EnsureSuccessStatusCode();
+
+            var httpResponseBody = await httpResponse.Content.ReadAsStringAsync();
+
+            var response = JsonSerializer.Deserialize<Models.ExternalModels.WrcEvents>(httpResponseBody);
 
             var events = new List<Event>();
 

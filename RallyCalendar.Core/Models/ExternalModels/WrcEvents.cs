@@ -2,7 +2,7 @@
 
 namespace RallyCalendar.Core.Models.ExternalModels
 {
-    public class Events
+    public class WrcEvents
     {
         [JsonPropertyName("content")]
         public Content[] Content { get; set; }
