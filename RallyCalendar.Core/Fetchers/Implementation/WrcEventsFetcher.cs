@@ -6,8 +6,9 @@ namespace RallyCalendar.Core.Fetchers.Implementation;
 
 public class WrcEventsFetcher : BaseHttpFetcher, IEventsFetcher
 {
-    public WrcEventsFetcher() : base(ConfigurationManager.GetSetting("WrcEndpoint"))
+    public WrcEventsFetcher()
     {
+        SetBaseAddress(ConfigurationManager.GetSetting("WrcEndpoint"));
     }
 
     public async Task<IEnumerable<Event>> GetEvents(string championship, int year)

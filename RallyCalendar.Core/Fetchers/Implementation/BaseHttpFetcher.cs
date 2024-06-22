@@ -5,14 +5,15 @@ public abstract class BaseHttpFetcher
 {
     private readonly HttpClient _httpClient;
 
-    public BaseHttpFetcher(string endpoint)
+    public BaseHttpFetcher()
     {
         _httpClient = new HttpClient();
-        _httpClient.BaseAddress = new Uri(endpoint);
     }
 
-    public async Task<TResponse> GetAsync<TResponse>(string endpoint)
+    protected async Task<TResponse> GetAsync<TResponse>(string endpoint)
     {
+        //TODO: throw exeption if not BaseAddress
+
         var httpResponse = await _httpClient.GetAsync(endpoint);
         httpResponse.EnsureSuccessStatusCode();
 
@@ -27,5 +28,10 @@ public abstract class BaseHttpFetcher
             throw new Exception("Failed to deserialize the response.");
 
         return result;
+    }
+
+    protected void SetBaseAddress(string endpoint) 
+    {
+        _httpClient.BaseAddress = new Uri(endpoint);
     }
 }
