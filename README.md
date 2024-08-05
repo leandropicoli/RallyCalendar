@@ -60,3 +60,8 @@ Choose an event by Round:
 
 You have chosen: Rallye Monte-Carlo
 ICS file created successfully!
+```
+
+Once you import the ICS into your calendar, it will look like this:
+
+![Rally Calendar Screenshot](calendar.png)
