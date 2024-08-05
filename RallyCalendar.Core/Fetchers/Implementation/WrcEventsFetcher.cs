@@ -13,6 +13,7 @@ public class WrcEventsFetcher : BaseHttpFetcher, IEventsFetcher
 
     public async Task<IEnumerable<Event>> GetEvents(string championship, int year)
     {
+        //TODO: add cache and BD
         var endpoint = $"content/filters/calendar?championship={championship}&origin=vcms&year={year}";
         
         var response = await GetAsync<Models.ExternalModels.WrcEvents>(endpoint);

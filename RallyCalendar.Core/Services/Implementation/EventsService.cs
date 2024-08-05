@@ -1,4 +1,5 @@
 ﻿using RallyCalendar.Core.Fetchers.Abstraction;
+using RallyCalendar.Core.Models;
 using RallyCalendar.Core.Services.Abstraction;
 
 namespace RallyCalendar.Core.Services.Implementation;
@@ -10,6 +11,17 @@ public class EventsService : IEventsService
     public EventsService(IEventsFetcher fetcher)
     {
         _fetcher = fetcher;
+    }
+
+    public async Task<IEnumerable<Event>> GetEventsAsync(string championship, int? year)
+    {
+        if (string.IsNullOrWhiteSpace(championship))
+            throw new Exception("Championship cannot be null or empty");
+
+        if (year == null)
+            year = DateTime.UtcNow.Year;
+
+        return await _fetcher.GetEvents(championship, year.Value); ;
     }
 
     public async Task HandleEventsAsync(string championship, int? year)
@@ -26,7 +38,5 @@ public class EventsService : IEventsService
         {
             Console.WriteLine(item.ToString());
         }
-
-        //store on DB
     }
 }

@@ -12,8 +12,6 @@ public abstract class BaseHttpFetcher
 
     protected async Task<TResponse> GetAsync<TResponse>(string endpoint)
     {
-        //TODO: throw exeption if not BaseAddress
-
         var httpResponse = await _httpClient.GetAsync(endpoint);
         httpResponse.EnsureSuccessStatusCode();
 
